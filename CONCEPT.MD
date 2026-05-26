@@ -186,6 +186,10 @@ structured data. For a release's NFO it produces:
 - a brief **summary** of those notes,
 - one or more **note categories** (tags), with a confidence score.
 
+When the release belongs to a group that has known **default notes** (§11), that boilerplate is
+passed to the LLM as context, so the model can tell the group's standard text apart from
+genuine release-specific notes and not flag a boilerplate-only NFO as `HAS_NOTES`.
+
 It also assigns **tags** to releases/submissions, from two origins:
 - **From the release name** (pattern-based): `PROPER`, `READNFO`, `REPACK`, `INTERNAL`.
 - **From LLM analysis of the NFO**: `HAS_NOTES`, `SCENE_DRAMA`, `GROUP_NEWS`, `TECHNICAL`.
@@ -258,10 +262,15 @@ group's ruleset, that match **takes precedence over trust** when choosing the ca
 > Note: this decides the canonical *name*; the trust ranking in §4 decides the canonical
 > *submission* (file). They are separate "canonical" choices.
 
+Alongside its naming ruleset, a release group can also have one or more **default notes**: the
+boilerplate its NFOs ship with (standard greetings, group-news template, ASCII banner). These
+are given to the LLM analysis (§7) as context, so the model can tell the group's standard text
+apart from genuine release-specific notes when deciding `HAS_NOTES`.
+
 > Still to be designed: the rule format, precedence between competing rules, per-group
-> management (who creates/edits rulesets), and the fallback when no rule matches (where
-> trust-based selection still applies). The data model should leave room for this from the
-> start.
+> management (who creates/edits rulesets), how the default notes attach to the model and how
+> many a group may hold, and the fallback when no rule matches (where trust-based selection
+> still applies). The data model should leave room for this from the start.
 
 ---
 
