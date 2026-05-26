@@ -4,7 +4,7 @@ namespace Domain.Releases;
 
 /// <summary>
 /// A distinct physical file under the same release name, keyed by the SHA-256 hash of its main
-/// payload. Ranks independently by its own trust grade; the top-ranked variant's hash becomes the
+/// payload. Ranks independently by its own trust score; the top-ranked variant's hash becomes the
 /// release's canonical file hash. Part of the <see cref="Release"/> aggregate.
 /// </summary>
 public sealed class ReleaseVariant : IHasTimestamps
@@ -19,7 +19,7 @@ public sealed class ReleaseVariant : IHasTimestamps
 
     public string FileHash { get; private set; }
 
-    public int CumulativeTrustGrade { get; private set; }
+    public int CumulativeTrustScore { get; private set; }
 
     public int SubmissionCount { get; private set; }
 
@@ -34,9 +34,9 @@ public sealed class ReleaseVariant : IHasTimestamps
             FileHash = fileHash
         };
 
-    internal void SetRanking(int cumulativeTrustGrade, int submissionCount)
+    internal void SetRanking(int cumulativeTrustScore, int submissionCount)
     {
-        CumulativeTrustGrade = cumulativeTrustGrade;
+        CumulativeTrustScore = cumulativeTrustScore;
         SubmissionCount = submissionCount;
     }
 }

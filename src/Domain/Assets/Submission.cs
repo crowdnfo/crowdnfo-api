@@ -3,7 +3,7 @@ using SharedKernel;
 namespace Domain.Assets;
 
 /// <summary>
-/// One user's submission of an asset. <see cref="TrustGradeAtSubmit"/> is a snapshot, so later role
+/// One user's submission of an asset. <see cref="TrustScoreAtSubmit"/> is a snapshot, so later role
 /// changes do not retro-edit past credits. Unique per (asset, user); optionally links to a variant.
 /// </summary>
 public sealed class Submission : IHasTimestamps
@@ -18,7 +18,7 @@ public sealed class Submission : IHasTimestamps
 
     public Guid UserId { get; private set; }
 
-    public int TrustGradeAtSubmit { get; private set; }
+    public int TrustScoreAtSubmit { get; private set; }
 
     public Guid? VariantId { get; private set; }
 
@@ -26,13 +26,13 @@ public sealed class Submission : IHasTimestamps
 
     public DateTime UpdatedAt { get; private set; }
 
-    internal static Submission Create(Guid assetId, Guid userId, int trustGradeAtSubmit, Guid? variantId) =>
+    internal static Submission Create(Guid assetId, Guid userId, int trustScoreAtSubmit, Guid? variantId) =>
         new()
         {
             Id = Guid.CreateVersion7(),
             AssetId = assetId,
             UserId = userId,
-            TrustGradeAtSubmit = trustGradeAtSubmit,
+            TrustScoreAtSubmit = trustScoreAtSubmit,
             VariantId = variantId
         };
 }

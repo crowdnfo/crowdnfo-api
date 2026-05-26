@@ -1,7 +1,7 @@
 namespace Domain.Users;
 
 /// <summary>
-/// Canonical role names. Trust weights and the admin flag are data (see <see cref="Role"/>);
+/// Canonical role names. Trust scores and the admin flag are data (see <see cref="Role"/>);
 /// only the names are referenced from code (e.g. resolving the default role for new members).
 /// </summary>
 public static class RoleNames

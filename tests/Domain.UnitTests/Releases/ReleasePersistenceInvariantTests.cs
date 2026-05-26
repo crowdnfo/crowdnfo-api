@@ -29,7 +29,7 @@ public class ReleasePersistenceInvariantTests
         Release release = CreateTransientRelease();
         release.Id.ShouldBe(0);
 
-        Action submit = () => release.SubmitAsset(CreateNfoAsset(), Guid.NewGuid(), trustGradeAtSubmit: 15);
+        Action submit = () => release.SubmitAsset(CreateNfoAsset(), Guid.NewGuid(), trustScoreAtSubmit: 15);
 
         submit.ShouldThrow<InvalidOperationException>();
     }
