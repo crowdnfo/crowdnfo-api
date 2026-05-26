@@ -25,7 +25,7 @@ public abstract class Asset : IHasTimestamps
 
     public ModerationState ModerationState { get; private set; }
 
-    public int CumulativeTrustGrade { get; private set; }
+    public int CumulativeTrustScore { get; private set; }
 
     public int SubmissionCount { get; private set; }
 
@@ -55,9 +55,9 @@ public abstract class Asset : IHasTimestamps
         }
     }
 
-    internal Submission AddSubmission(Guid userId, int trustGradeAtSubmit, Guid? variantId)
+    internal Submission AddSubmission(Guid userId, int trustScoreAtSubmit, Guid? variantId)
     {
-        var submission = Submission.Create(Id, userId, trustGradeAtSubmit, variantId);
+        var submission = Submission.Create(Id, userId, trustScoreAtSubmit, variantId);
         _submissions.Add(submission);
         return submission;
     }
@@ -66,9 +66,9 @@ public abstract class Asset : IHasTimestamps
 
     internal void Restore() => ModerationState = ModerationState.Visible;
 
-    internal void SetRanking(int cumulativeTrustGrade, int submissionCount)
+    internal void SetRanking(int cumulativeTrustScore, int submissionCount)
     {
-        CumulativeTrustGrade = cumulativeTrustGrade;
+        CumulativeTrustScore = cumulativeTrustScore;
         SubmissionCount = submissionCount;
     }
 }

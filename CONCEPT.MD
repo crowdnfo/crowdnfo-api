@@ -22,7 +22,7 @@ The platform is consumed both by **humans** (web frontend) and by **automated cl
 (e.g. download/automation clients) that submit and read data via API.
 
 **Core building blocks:**
-- **Users** with roles and a trust weight.
+- **Users** with roles and a trust score.
 - **Releases**, each with a canonical name, optional group, category, aliases and variants.
 - **Submissions** of three kinds (NFO, MediaInfo, file list) attached to releases.
 - **Products** (movies, TV series, Games, ...) linked to releases. Movies and TV series are
@@ -39,10 +39,10 @@ The platform is consumed both by **humans** (web frontend) and by **automated cl
 - Users can optionally enable **two-factor authentication (2FA)** for their account.
 
 ### Roles
-Roles are data-driven. Each role carries a **trust weight** (used purely as a ranking signal,
+Roles are data-driven. Each role carries a **trust score** (used purely as a ranking signal,
 see §4) and a flag for admin-panel access.
 
-| Role        | Trust weight | Admin access | Notes                                   |
+| Role        | Trust score  | Admin access | Notes                                   |
 |-------------|-------------:|:------------:|-----------------------------------------|
 | Admin       | 100          | yes          | Full access to the admin panel          |
 | TrustedBot  | 100          | no           | Internal automation; no interactive login |
@@ -51,7 +51,7 @@ see §4) and a flag for admin-panel access.
 | **User**    | 15           | no           | **Default role for new members**        |
 
 > The original concept used the role "Member"; the default role is now **User**. Trust
-> weights are configurable; the values above are the current defaults.
+> scores are configurable; the values above are the current defaults.
 
 ### Profile visibility
 Each user chooses who may see their identity. This rule is applied **everywhere a username
@@ -76,7 +76,7 @@ A release has:
 - **Variants**: distinct physical files that circulate under the *same* release name (e.g.
   different encodes/sources of the same movie). Each variant is identified by the **SHA-256
   hash of its main payload file** (e.g. the `.mkv`), and a submission attaches to a specific
-  variant by that hash. Each variant ranks independently by its own cumulative trust grade
+  variant by that hash. Each variant ranks independently by its own cumulative trust score
   (§4); the top-ranked variant's hash is recorded as the release's **canonical file hash**.
 - An optional link to a **product** (the movie/series it represents, see §5), set
   automatically by the pipeline once it can be determined.
@@ -100,12 +100,12 @@ it independently.
 A release can hold several competing submissions of the same kind (e.g. two different NFOs).
 crowdNFO ranks them by trust and shows the strongest:
 
-- Each submission accumulates a **cumulative trust grade** = the sum of the **distinct**
-  submitting users' role trust weights.
-- The submission with the highest cumulative trust grade is displayed as the
+- Each submission accumulates a **cumulative trust score** = the sum of the **distinct**
+  submitting users' role trust scores.
+- The submission with the highest cumulative trust score is displayed as the
   **canonical/default** version for the release. Ties are broken by submission count (more
   distinct contributors first), then by the most recent submission.
-- Beyond ranking, the trust grade can be used as a filter on demand (e.g. to show only
+- Beyond ranking, the trust score can be used as a filter on demand (e.g. to show only
   "trusted-enough" submissions).
 
 ### Moderation
@@ -170,7 +170,7 @@ runtime-configurable rule set; deploying new code is how the pipeline changes.
   wait for any acceptance threshold.
 - Each release/product tracks **per-step status** (e.g. ready → in progress → completed /
   failed), timing, error messages, and retry counts.
-- The pipeline always works from the **best** submission (top-ranked by trust grade), and
+- The pipeline always works from the **best** submission (top-ranked by trust score), and
   re-runs a step if the best submission changes.
 - Steps that call external APIs are **rate-limited** and retried with backoff.
 
@@ -276,7 +276,7 @@ apart from genuine release-specific notes when deciding `HAS_NOTES`.
 
 ## Appendix: key reference values
 
-- **Default role:** User (trust weight 15). Other weights: Trusted 40, VIP 50, Admin 100,
+- **Default role:** User (trust score 15). Other scores: Trusted 40, VIP 50, Admin 100,
   TrustedBot 100.
 - **Submission types:** NFO, MediaInfo, FileList.
 - **Release categories:** Movies, TV, Games, Software, Music, Books, Audiobooks, Other,
@@ -287,5 +287,5 @@ apart from genuine release-specific notes when deciding `HAS_NOTES`.
   GROUP_NEWS, TECHNICAL (LLM).
 
 > Removed from the original concept: the cumulative-trust **acceptance threshold** and the
-> Pending/Accepted/Rejected state machine. Trust weights now serve only as a ranking signal;
+> Pending/Accepted/Rejected state machine. Trust scores now serve only as a ranking signal;
 > moderation is a separate Visible/Removed state.

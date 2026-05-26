@@ -71,7 +71,7 @@ public sealed class Release : Entity, IHasTimestamps
     }
 
     /// <summary>Idempotent per user; the asset content is already deduplicated by the caller.</summary>
-    public Submission SubmitAsset(Asset asset, Guid userId, int trustGradeAtSubmit, string? variantFileHash = null)
+    public Submission SubmitAsset(Asset asset, Guid userId, int trustScoreAtSubmit, string? variantFileHash = null)
     {
         Submission? existing = _assets.Contains(asset)
             ? asset.Submissions.FirstOrDefault(s => s.UserId == userId)
@@ -96,7 +96,7 @@ public sealed class Release : Entity, IHasTimestamps
             variantId = variant.Id;
         }
 
-        Submission submission = asset.AddSubmission(userId, trustGradeAtSubmit, variantId);
+        Submission submission = asset.AddSubmission(userId, trustScoreAtSubmit, variantId);
         RecalculateRankings(previousBestNfoHash);
         return submission;
     }
@@ -180,8 +180,8 @@ public sealed class Release : Entity, IHasTimestamps
     }
 
     /// <summary>
-    /// Recomputes cumulative trust grades from the distinct submitters' snapshot weights (removed
-    /// assets do not count toward variant grades) and re-selects the canonical variant.
+    /// Recomputes cumulative trust scores from the distinct submitters' snapshot scores (removed
+    /// assets do not count toward variant scores) and re-selects the canonical variant.
     /// </summary>
     private void RecalculateRankings(string? previousBestNfoHash)
     {
@@ -189,8 +189,8 @@ public sealed class Release : Entity, IHasTimestamps
 
         foreach (Asset asset in _assets)
         {
-            List<int> grades = DistinctUserGrades(asset.Submissions);
-            asset.SetRanking(grades.Sum(), grades.Count);
+            List<int> scores = DistinctUserScores(asset.Submissions);
+            asset.SetRanking(scores.Sum(), scores.Count);
         }
 
         foreach (ReleaseVariant variant in _variants)
@@ -200,12 +200,12 @@ public sealed class Release : Entity, IHasTimestamps
                 .SelectMany(a => a.Submissions)
                 .Where(s => s.VariantId == variant.Id);
 
-            List<int> grades = DistinctUserGrades(variantSubmissions);
-            variant.SetRanking(grades.Sum(), grades.Count);
+            List<int> scores = DistinctUserScores(variantSubmissions);
+            variant.SetRanking(scores.Sum(), scores.Count);
         }
 
         ReleaseVariant? topVariant = _variants
-            .OrderByDescending(v => v.CumulativeTrustGrade)
+            .OrderByDescending(v => v.CumulativeTrustScore)
             .ThenByDescending(v => v.SubmissionCount)
             .ThenByDescending(v => v.CreatedAt)
             .ThenByDescending(v => v.Id)
@@ -224,15 +224,15 @@ public sealed class Release : Entity, IHasTimestamps
         _assets
             .OfType<NfoAsset>()
             .Where(a => a.IsVisible)
-            .OrderByDescending(a => a.CumulativeTrustGrade)
+            .OrderByDescending(a => a.CumulativeTrustScore)
             .ThenByDescending(a => a.SubmissionCount)
             .ThenByDescending(a => a.CreatedAt)
             .ThenByDescending(a => a.Id)
             .FirstOrDefault();
 
-    private static List<int> DistinctUserGrades(IEnumerable<Submission> submissions) =>
+    private static List<int> DistinctUserScores(IEnumerable<Submission> submissions) =>
         submissions
             .GroupBy(s => s.UserId)
-            .Select(g => g.Max(s => s.TrustGradeAtSubmit))
+            .Select(g => g.Max(s => s.TrustScoreAtSubmit))
             .ToList();
 }
