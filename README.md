@@ -44,3 +44,8 @@ override them via user secrets or environment variables for non-development envi
 dotnet build CrowdNfo.Api.slnx
 dotnet test CrowdNfo.Api.slnx
 ```
+
+## AI usage disclaimer
+
+This codebase was developed with light LLM assistance, limited to boilerplate,
+auto-completion, comments, and code review.
