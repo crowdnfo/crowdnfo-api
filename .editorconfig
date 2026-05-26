@@ -1,5 +1,31 @@
 root = true
 
+#### Global defaults (all files) ####
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# JSON
+[*.{json,jsonc}]
+indent_size = 2
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+
+# MSBuild / solution files
+[*.{csproj,props,targets,slnx}]
+indent_size = 2
+
+# Markdown (trailing whitespace is significant: two spaces = hard line break)
+[*.md]
+trim_trailing_whitespace = false
+
 # C# files
 [*.cs]
 
@@ -258,8 +284,15 @@ dotnet_diagnostic.CA1040.severity = none
 # CA1051: Do not declare visible instance fields
 dotnet_diagnostic.CA1051.severity = none
 
+# CA1054: URI-like parameters should not be strings (consistent with CA1056 below)
+dotnet_diagnostic.CA1054.severity = none
+
 # CA1056: URI-like properties should not be strings
 dotnet_diagnostic.CA1056.severity = none
+
+# CA1308: Normalize strings to uppercase - external ids (e.g. IMDB "tt..." ) are normalized to
+# lowercase on purpose, to match provider convention and what we display/return.
+dotnet_diagnostic.CA1308.severity = none
 
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
@@ -375,6 +408,13 @@ dotnet_diagnostic.IDE0290.severity = none
 
 # S112: General or reserved exceptions should never be thrown
 dotnet_diagnostic.S112.severity = none
+
+# S1144: Unused private members - EF Core sets private setters (ids, audit timestamps) by reflection,
+# so they look unused to the analyzer on encapsulated domain entities.
+dotnet_diagnostic.S1144.severity = none
+
+# S3459: Unassigned members - same reason: EF assigns store-generated members (ids, timestamps).
+dotnet_diagnostic.S3459.severity = none
 
 # S125: Sections of code should not be commented out
 dotnet_diagnostic.S125.severity = none

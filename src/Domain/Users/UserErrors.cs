@@ -1,4 +1,4 @@
-﻿using SharedKernel;
+using SharedKernel;
 
 namespace Domain.Users;
 
@@ -19,4 +19,20 @@ public static class UserErrors
     public static readonly Error EmailNotUnique = Error.Conflict(
         "Users.EmailNotUnique",
         "The provided email is not unique");
+
+    public static readonly Error UsernameNotUnique = Error.Conflict(
+        "Users.UsernameNotUnique",
+        "The provided username is not unique");
+
+    public static readonly Error AlreadyActivated = Error.Conflict(
+        "Users.AlreadyActivated",
+        "The user is already activated");
+
+    public static readonly Error NotActivated = Error.Failure(
+        "Users.NotActivated",
+        "The user account is not activated");
+
+    public static readonly Error Locked = Error.Failure(
+        "Users.Locked",
+        "The user account is locked");
 }

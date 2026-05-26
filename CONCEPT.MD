@@ -151,6 +151,8 @@ limits and handles failures/retries gracefully.
 A **background pipeline** moves each release from "just submitted" to "fully enriched
 product" without user action. It is **condition-driven**: each step declares when it is
 *ready* to run and when it is *not applicable*, so steps fire only when their inputs exist.
+The pipeline is **code-driven**: each step is a class with its own readiness logic, not a
+runtime-configurable rule set; deploying new code is how the pipeline changes.
 
 ### Steps
 - **NFO analysis**: parses the best NFO of a release to extract external IDs (e.g. IMDB ID)
@@ -219,8 +221,9 @@ Admins (roles with admin access) manage the platform:
 - **Releases & submissions**: edit, and **remove** (moderate) submissions.
 - **Reports**: review reported submissions/comments and act.
 - **Tickets**: handle support requests.
-- **Processing & configuration**: observe the processing pipeline, re-sync processing
-  configuration, and **reset stuck processing steps**.
+- **Processing & configuration**: observe the processing pipeline, **re-evaluate / backfill
+  processing for existing releases/products** (e.g. after a new step is added), and **reset
+  stuck processing steps**.
 
 ---
 
