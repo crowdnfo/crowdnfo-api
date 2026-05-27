@@ -22,14 +22,11 @@ builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 WebApplication app = builder.Build();
 
-app.MapEndpoints();
+app.MapEndpoints(app.MapGroup("api/v1"));
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwaggerWithUi();
+app.UseSwaggerWithUi();
 
-    app.ApplyMigrations();
-}
+app.ApplyMigrations();
 
 app.MapHealthChecks("health", new HealthCheckOptions
 {

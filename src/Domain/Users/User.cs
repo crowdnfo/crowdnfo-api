@@ -12,7 +12,11 @@ public sealed class User : Entity, IHasTimestamps
 
     public string Username { get; private set; }
 
+    public string NormalizedUsername { get; private set; }
+
     public string Email { get; private set; }
+
+    public string NormalizedEmail { get; private set; }
 
     public string PasswordHash { get; private set; }
 
@@ -23,6 +27,8 @@ public sealed class User : Entity, IHasTimestamps
     public bool IsActivated { get; private set; }
 
     public bool IsLocked { get; private set; }
+
+    public string? LockedReason { get; private set; }
 
     public DateTime? LastLoginAt { get; private set; }
 
@@ -39,7 +45,9 @@ public sealed class User : Entity, IHasTimestamps
         {
             Id = Guid.CreateVersion7(),
             Username = username,
+            NormalizedUsername = NormalizeUsername(username),
             Email = email,
+            NormalizedEmail = NormalizeEmail(email),
             PasswordHash = passwordHash,
             RoleId = roleId,
             ProfileVisibility = ProfileVisibility.Public,
@@ -66,15 +74,45 @@ public sealed class User : Entity, IHasTimestamps
         return Result.Success();
     }
 
-    public void Lock() => IsLocked = true;
+    public Result EnsureCanSignIn()
+    {
+        if (!IsActivated)
+        {
+            return Result.Failure(UserErrors.NotActivated);
+        }
+
+        if (IsLocked)
+        {
+            return Result.Failure(UserErrors.Locked(LockedReason));
+        }
+
+        return Result.Success();
+    }
+
+    public void AssignRole(int roleId) => RoleId = roleId;
+
+    public void ChangePassword(string passwordHash) => PasswordHash = passwordHash;
+
+    public void Lock(string? reason)
+    {
+        IsLocked = true;
+        LockedReason = reason;
+    }
 
     public void Unlock()
     {
         IsLocked = false;
+        LockedReason = null;
         FailedLoginAttempts = 0;
     }
 
     public void ChangeVisibility(ProfileVisibility visibility) => ProfileVisibility = visibility;
+
+    public void ChangeEmail(string email)
+    {
+        Email = email;
+        NormalizedEmail = NormalizeEmail(email);
+    }
 
     public void RecordSuccessfulLogin(DateTime occurredAt)
     {
@@ -83,4 +121,8 @@ public sealed class User : Entity, IHasTimestamps
     }
 
     public void RecordFailedLogin() => FailedLoginAttempts++;
+
+    public static string NormalizeUsername(string username) => username.Trim().ToLowerInvariant();
+
+    public static string NormalizeEmail(string email) => email.Trim().ToLowerInvariant();
 }

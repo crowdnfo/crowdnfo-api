@@ -44,4 +44,15 @@ public sealed class RefreshToken : IHasTimestamps
 
         return Result.Success();
     }
+
+    public static void RevokeAll(IEnumerable<RefreshToken> tokens, DateTime now)
+    {
+        foreach (RefreshToken token in tokens)
+        {
+            if (token.RevokedAt is null)
+            {
+                token.Revoke(now);
+            }
+        }
+    }
 }

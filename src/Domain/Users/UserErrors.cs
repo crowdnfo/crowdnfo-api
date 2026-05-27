@@ -8,9 +8,13 @@ public static class UserErrors
         "Users.NotFound",
         $"The user with the Id = '{userId}' was not found");
 
-    public static Error Unauthorized() => Error.Failure(
+    public static Error Unauthorized() => Error.Forbidden(
         "Users.Unauthorized",
         "You are not authorized to perform this action.");
+
+    public static readonly Error InvalidCredentials = Error.Unauthorized(
+        "Users.InvalidCredentials",
+        "Invalid username or password");
 
     public static readonly Error NotFoundByEmail = Error.NotFound(
         "Users.NotFoundByEmail",
@@ -28,11 +32,11 @@ public static class UserErrors
         "Users.AlreadyActivated",
         "The user is already activated");
 
-    public static readonly Error NotActivated = Error.Failure(
+    public static readonly Error NotActivated = Error.Forbidden(
         "Users.NotActivated",
         "The user account is not activated");
 
-    public static readonly Error Locked = Error.Failure(
+    public static Error Locked(string? reason) => Error.Forbidden(
         "Users.Locked",
-        "The user account is locked");
+        reason is { Length: > 0 } ? reason : "The user account is locked");
 }
