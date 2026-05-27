@@ -207,8 +207,8 @@ public sealed class Release : Entity, IHasTimestamps
         ReleaseVariant? topVariant = _variants
             .OrderByDescending(v => v.CumulativeTrustScore)
             .ThenByDescending(v => v.SubmissionCount)
-            .ThenByDescending(v => v.CreatedAt)
-            .ThenByDescending(v => v.Id)
+            .ThenBy(v => v.CreatedAt)
+            .ThenBy(v => v.Id)
             .FirstOrDefault();
 
         CanonicalFileHash = topVariant?.FileHash;
@@ -226,8 +226,8 @@ public sealed class Release : Entity, IHasTimestamps
             .Where(a => a.IsVisible)
             .OrderByDescending(a => a.CumulativeTrustScore)
             .ThenByDescending(a => a.SubmissionCount)
-            .ThenByDescending(a => a.CreatedAt)
-            .ThenByDescending(a => a.Id)
+            .ThenBy(a => a.CreatedAt)
+            .ThenBy(a => a.Id)
             .FirstOrDefault();
 
     private static List<int> DistinctUserScores(IEnumerable<Submission> submissions) =>
