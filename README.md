@@ -48,4 +48,4 @@ dotnet test CrowdNfo.Api.slnx
 ## AI usage disclaimer
 
 This codebase was developed with light LLM assistance, limited to boilerplate,
-auto-completion, comments, and code review.
+auto-completion, comments, and code review. Tests are sometimes fully written by LLM.
