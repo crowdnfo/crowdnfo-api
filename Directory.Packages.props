@@ -36,8 +36,6 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.2" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.6.0" />
-    <PackageVersion Include="Respawn" Version="6.2.1" />
-    <!-- Overrides Respawn's vulnerable transitive SqlClient 4.0.5 (Azure.Identity 1.3.0 + System.Drawing.Common 5.0.0). Unused at runtime (Postgres adapter), pinned for the security audit. -->
-    <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageVersion Include="Respawn" Version="7.0.0" />
   </ItemGroup>
 </Project>
