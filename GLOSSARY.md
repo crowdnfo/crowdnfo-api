@@ -85,7 +85,7 @@ Verified against `src/Domain` as of 2026-05-27.
 
 ## Retired legacy terms
 
-Words from legacy rowdNFO backend that have no equivalent here. They were removed on purpose.
+Words from legacy crowdNFO backend that have no equivalent here. They were removed on purpose.
 
 | Legacy term | Status | Replacement |
 |---|---|---|
