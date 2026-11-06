@@ -1,7 +1,6 @@
 # crowdnfo-api: Glossary (Ubiquitous Language)
 
-One row per term: the definition, where it lives in code, and the legacy name it replaces (the
-sibling `../crowdNFO` app). Terms that were deliberately dropped are listed under "Retired legacy
+One row per term: the definition, where it lives in code, and the legacy name it replaces. Terms that were deliberately dropped are listed under "Retired legacy
 terms" so old wording is not silently reused.
 
 Verified against `src/Domain` as of 2026-05-27.
